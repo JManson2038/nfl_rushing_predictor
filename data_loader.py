@@ -1,7 +1,5 @@
-"""
-NFL Rushing Data Loader
-Handles loading data from Pro Football Reference and other sources
-"""
+#NFL Rushing Data Loader
+#Handles loading data from Pro Football Reference and other sources
 
 import pandas as pd
 import numpy as np
@@ -20,7 +18,7 @@ from config.settings import (
 )
 
 class NFLDataLoader:
-    """Load and manage NFL rushing data from various sources"""
+    #Load and manage NFL rushing data from various sources
     
     def __init__(self, use_cache: bool = True):
         self.use_cache = use_cache
@@ -58,7 +56,7 @@ class NFLDataLoader:
         return df
     
     def _load_from_nfl_data_py(self) -> pd.DataFrame:
-        """Load data using nfl-data-py library"""
+        #Load data using nfl-data-py library
         try:
             import nfl_data_py as nfl
             
@@ -231,7 +229,7 @@ class NFLDataLoader:
         return df
     
     def load_current_season_data(self) -> pd.DataFrame:
-        """Load current season (2025) player data for predictions"""
+        #Load current season (2025) player data for predictions
         from config.settings import CURRENT_PLAYERS_2025
         
         df = pd.DataFrame(CURRENT_PLAYERS_2025)
@@ -239,7 +237,7 @@ class NFLDataLoader:
         return df
     
     def get_data_summary(self, df: pd.DataFrame) -> Dict:
-        """Get summary statistics of the loaded data"""
+        #Get summary statistics of the loaded data
         return {
             'total_records': len(df),
             'unique_players': df['player_name'].nunique(),

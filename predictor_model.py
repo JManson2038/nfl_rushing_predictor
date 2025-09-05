@@ -1,7 +1,6 @@
-"""
-NFL Rushing Predictor Model
-Main ML model for predicting NFL rushing performance
-"""
+# NFL Rushing Predictor Model
+# Main ML model for predicting NFL rushing performance
+
 
 import pandas as pd
 import numpy as np
@@ -20,7 +19,7 @@ from config.settings import MODEL_CONFIG, MODELS_DIR, PREDICTION_CONFIG
 from src.data.data_processor import NFLDataProcessor
 
 class NFLRushingPredictor:
-    """Main predictor class for NFL rushing yards"""
+    #Main predictor class for NFL rushing yards
     
     def __init__(self, model_type: str = 'gradient_boosting'):
         self.model_type = model_type

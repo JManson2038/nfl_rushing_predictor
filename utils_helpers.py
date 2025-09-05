@@ -1,6 +1,4 @@
-"""
-Utility functions for NFL Rushing Predictor
-"""
+#Utility functions for NFL Rushing Predictor
 
 import pandas as pd
 import numpy as np
@@ -12,7 +10,7 @@ from datetime import datetime
 from pathlib import Path
 
 def setup_logging(log_level: str = 'INFO', log_file: Optional[str] = None) -> logging.Logger:
-    """Setup logging configuration"""
+    #Setup logging configuration
     logging.basicConfig(
         level=getattr(logging, log_level.upper()),
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -24,7 +22,7 @@ def setup_logging(log_level: str = 'INFO', log_file: Optional[str] = None) -> lo
     return logging.getLogger(__name__)
 
 def format_predictions_output(results: pd.DataFrame) -> str:
-    """Format predictions for display"""
+    #Format predictions for display
     output = []
     output.append("🏆 2025 NFL RUSHING LEADER PREDICTIONS")
     output.append("=" * 70)
@@ -66,7 +64,7 @@ def format_predictions_output(results: pd.DataFrame) -> str:
     return "\n".join(output)
 
 def create_feature_importance_plot(importance_df: pd.DataFrame, top_n: int = 15, save_path: Optional[str] = None):
-    """Create feature importance visualization"""
+    #Create feature importance visualization
     plt.figure(figsize=(12, 8))
     
     top_features = importance_df.head(top_n)
@@ -90,7 +88,7 @@ def create_feature_importance_plot(importance_df: pd.DataFrame, top_n: int = 15,
     plt.show()
 
 def create_predictions_comparison_plot(results: pd.DataFrame, save_path: Optional[str] = None):
-    """Create scatter plot comparing predictions vs previous year performance"""
+    #Create scatter plot comparing predictions vs previous year performance
     if 'previous_year_yards' not in results.columns:
         print("Previous year data not available for comparison plot")
         return
@@ -128,4 +126,3 @@ def create_predictions_comparison_plot(results: pd.DataFrame, save_path: Optiona
     plt.show()
 
 def create_age_distribution_plot(results: pd.DataFrame, save_path: Optional[str] = None):
-    """Create

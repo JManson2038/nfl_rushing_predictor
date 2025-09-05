@@ -1,7 +1,6 @@
-"""
-NFL Data Processor
-Handles feature engineering and data preprocessing for ML models
-"""
+#NFL Data Processor
+#Handles feature engineering and data preprocessing for ML models
+
 
 import pandas as pd
 import numpy as np
@@ -16,7 +15,7 @@ sys.path.append(str(Path(__file__).parent.parent.parent))
 from config.settings import FEATURE_CONFIG
 
 class NFLDataProcessor:
-    """Process and engineer features for NFL rushing prediction"""
+    #Process and engineer features for NFL rushing prediction
     
     def __init__(self):
         self.scaler = StandardScaler()
@@ -25,7 +24,7 @@ class NFLDataProcessor:
         self.logger = logging.getLogger(__name__)
         
     def engineer_features(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Create additional features for better predictions"""
+        #Create additional features for better predictions
         self.logger.info("Engineering features...")
         
         df = df.copy()
@@ -83,7 +82,7 @@ class NFLDataProcessor:
         return df
     
     def _determine_career_stage(self, df: pd.DataFrame) -> pd.Series:
-        """Determine career stage based on age and experience"""
+        #Determine career stage based on age and experience
         def classify_stage(age):
             if age <= 24:
                 return 0  # Rookie/Sophomore

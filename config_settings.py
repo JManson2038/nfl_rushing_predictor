@@ -1,6 +1,4 @@
-"""
-NFL Rushing Predictor Configuration Settings
-"""
+#NFL Rushing Predictor Configuration Settings
 
 import os
 from pathlib import Path

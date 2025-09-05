@@ -42,7 +42,7 @@ class NFLRushingPredictor:
             raise ValueError(f"Unknown model type: {model_type}")
     
     def train(self, df: pd.DataFrame, target_col: str = 'rushing_yards') -> Dict[str, float]:
-        """Train the model on historical data"""
+        #Train the model on historical data
         self.logger.info(f"Training {self.model_type} model...")
         
         # Clean and validate data
@@ -90,7 +90,7 @@ class NFLRushingPredictor:
         return metrics
     
     def predict(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Make predictions for new data"""
+        #Make predictions for new data
         if not self.is_trained:
             raise ValueError("Model must be trained before making predictions")
         
@@ -131,7 +131,7 @@ class NFLRushingPredictor:
         return results.head(n)
     
     def get_feature_importance(self) -> pd.DataFrame:
-        """Get feature importance from trained model"""
+        #Get feature importance from trained model
         if not self.is_trained:
             raise ValueError("Model must be trained to get feature importance")
         
@@ -146,7 +146,7 @@ class NFLRushingPredictor:
         return importance_df
     
     def save_model(self, filepath: str = None) -> str:
-        """Save trained model and processor"""
+        #Save trained model and processor
         if not self.is_trained:
             raise ValueError("Model must be trained before saving")
         
@@ -165,7 +165,7 @@ class NFLRushingPredictor:
         return str(filepath)
     
     def load_model(self, filepath: str) -> None:
-        """Load trained model and processor"""
+        #Load trained model and processor
         model_data = joblib.load(filepath)
         
         self.model = model_data['model']
@@ -176,7 +176,7 @@ class NFLRushingPredictor:
         self.logger.info(f"Model loaded from {filepath}")
     
     def _calculate_metrics(self, y_true: np.ndarray, y_pred: np.ndarray) -> Dict[str, float]:
-        """Calculate evaluation metrics"""
+        #Calculate evaluation metrics
         return {
             'mae': mean_absolute_error(y_true, y_pred),
             'rmse': np.sqrt(mean_squared_error(y_true, y_pred)),
@@ -185,7 +185,7 @@ class NFLRushingPredictor:
         }
     
     def _add_confidence_intervals(self, results: pd.DataFrame, X_scaled: np.ndarray) -> pd.DataFrame:
-        """Add confidence intervals to predictions (for supported models)"""
+        #Add confidence intervals to predictions (for supported models)
         # This is a simplified approach - in production you'd use proper uncertainty quantification
         if hasattr(self.model, 'estimators_'):
             # For ensemble methods, use prediction variance
@@ -202,7 +202,7 @@ class NFLRushingPredictor:
         return results
     
     def _assess_injury_risk(self, df: pd.DataFrame) -> pd.Series:
-        """Assess injury risk based on player characteristics"""
+        #Assess injury risk based on player characteristics
         risk_factors = (
             df['age'] * 0.1 +  # Age factor
             df['injury_history'] * 0.3 +  # History factor
@@ -216,7 +216,7 @@ class NFLRushingPredictor:
         return risk_normalized.round(2)
     
     def analyze_predictions(self, results: pd.DataFrame) -> Dict[str, any]:
-        """Analyze and summarize predictions"""
+        #Analyze and summarize predictions
         analysis = {
             'predicted_leader': {
                 'name': results.iloc[0]['player_name'],
@@ -243,7 +243,7 @@ class NFLRushingPredictor:
         return analysis
     
     def compare_with_previous_year(self, results: pd.DataFrame) -> pd.DataFrame:
-        """Compare predictions with previous year performance"""
+        #Compare predictions with previous year performance
         if 'previous_year_yards' in results.columns:
             results['predicted_change'] = results['predicted_rushing_yards'] - results['previous_year_yards']
             results['predicted_change_pct'] = (results['predicted_change'] / results['previous_year_yards'] * 100).round(1)
@@ -258,7 +258,7 @@ class NFLRushingPredictor:
         return results
     
     def get_model_summary(self) -> Dict[str, any]:
-        """Get summary of trained model"""
+        #Get summary of trained model
         if not self.is_trained:
             return {'status': 'Not trained'}
         

@@ -98,7 +98,7 @@ class NFLDataLoader:
             raise ImportError("nfl-data-py not installed")
     
     def _load_fallback_historical_data(self) -> pd.DataFrame:
-        """Fallback method using curated historical data"""
+        #Fallback method using curated historical data
         self.logger.info("Loading fallback historical data...")
         
         # Historical NFL rushing leaders (real data)

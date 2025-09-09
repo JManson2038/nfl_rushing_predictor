@@ -89,3 +89,6 @@ class NFLDataProcessor:
             elif age <= 27:
                 return 1  # Prime
             elif age <= 30
+                return 2 # Veteran
+            
+        

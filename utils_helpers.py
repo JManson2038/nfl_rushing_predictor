@@ -126,3 +126,96 @@ def create_predictions_comparison_plot(results: pd.DataFrame, save_path: Optiona
     plt.show()
 
 def create_age_distribution_plot(results: pd.DataFrame, save_path: Optional[str] = None):
+    #Plot distribution of player ages
+    plt.figure(figsize=(10, 6))
+    
+    sns.histplot(results['age'], bins=15, kde=True, color='skyblue')
+    plt.title('Age Distribution of Predicted Rushing Leaders', fontsize=16, pad=20)
+    plt.xlabel('Age', fontsize=12)
+    plt.ylabel('Number of Players', fontsize=12)
+    plt.grid(axis='y', alpha=0.3)
+    
+    plt.tight_layout()
+    
+    if save_path:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    
+    plt.show()
+
+# New: update predictions with weekly stats (e.g. weeks 1-3 of 2025)
+def update_predictions_with_weekly_stats(
+    results: pd.DataFrame,
+    weekly_stats: pd.DataFrame,
+    weeks: List[int] = [1, 2, 3],
+    alpha: float = 0.6,
+    season_games: int = 17
+) -> pd.DataFrame:
+    """
+    Update/adjust model predictions using actual weekly rushing stats.
+
+    Parameters
+    - results: predictions dataframe produced by the model. Must contain 'player_name' and 'predicted_rushing_yards'.
+    - weekly_stats: DataFrame with columns ['player_name', 'week', 'rushing_yards'] (can include other cols).
+    - weeks: list of week numbers to apply (default [1,2,3]).
+    - alpha: blending weight for the original model prediction (0..1). adjusted = alpha*model + (1-alpha)*pace_projection
+    - season_games: number of games in the season (default 17)
+
+    Returns:
+    - DataFrame with added columns per-week, aggregate of the chosen weeks, projected full-season from pace,
+      and an adjusted model prediction.
+    """
+    # Ensure inputs
+    if 'player_name' not in results.columns:
+        raise ValueError("results must include 'player_name' column")
+    if 'predicted_rushing_yards' not in results.columns:
+        raise ValueError("results must include 'predicted_rushing_yards' column")
+    if not {'player_name', 'week', 'rushing_yards'}.issubset(weekly_stats.columns):
+        raise ValueError("weekly_stats must include 'player_name', 'week', and 'rushing_yards' columns")
+    
+    # Aggregate weekly stats for selected weeks
+    ws = weekly_stats[weekly_stats['week'].isin(weeks)].copy()
+    # Pivot so we get week1_yards, week2_yards, ...
+    pivot = ws.pivot_table(index='player_name', columns='week', values='rushing_yards', aggfunc='sum')
+    # Rename columns to weekX_yards
+    pivot = pivot.rename(columns=lambda c: f'week{int(c)}_yards')
+    
+    # Merge into results
+    merged = results.merge(pivot, how='left', left_on='player_name', right_index=True)
+    
+    # Ensure week columns exist and fill NaN with 0
+    for w in weeks:
+        col = f'week{w}_yards'
+        if col not in merged.columns:
+            merged[col] = 0
+        merged[col] = merged[col].fillna(0).astype(float)
+    
+    # Compute actual total for the chosen weeks
+    week_cols = [f'week{w}_yards' for w in weeks]
+    merged['actual_first_n_total'] = merged[week_cols].sum(axis=1)
+    
+    # Project full season from pace observed in the selected weeks
+    n_weeks = len(weeks)
+    merged['projected_from_weeks'] = (merged['actual_first_n_total'] * (season_games / n_weeks)).round(1)
+    
+    # Original model prediction (ensure numeric)
+    merged['model_predicted'] = merged['predicted_rushing_yards'].fillna(0).astype(float)
+    
+    # Blended adjusted prediction
+    merged['adjusted_predicted_rushing_yards'] = (
+        (alpha * merged['model_predicted']) + ((1 - alpha) * merged['projected_from_weeks'])
+    ).round().astype(int)
+    
+    # Differences and percent change
+    merged['adjustment_diff'] = merged['adjusted_predicted_rushing_yards'] - merged['model_predicted']
+    # avoid divide-by-zero
+    merged['adjustment_pct'] = merged.apply(
+        lambda r: ((r['adjusted_predicted_rushing_yards'] / r['model_predicted'] - 1) * 100)
+        if r['model_predicted'] > 0 else np.nan,
+        axis=1
+    ).round(1)
+    
+    # Helpful summary columns
+    merged['weeks_used'] = ",".join(str(w) for w in weeks)
+    merged = merged.sort_values('adjusted_predicted_rushing_yards', ascending=False)
+    
+    return merged

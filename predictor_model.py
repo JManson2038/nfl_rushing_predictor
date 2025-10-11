@@ -17,6 +17,7 @@ import sys
 sys.path.append(str(Path(__file__).parent.parent.parent))
 from config.settings import MODEL_CONFIG, MODELS_DIR, PREDICTION_CONFIG
 from src.data.data_processor import NFLDataProcessor
+from .utils_helpers import update_predictions_with_weekly_stats
 
 class NFLRushingPredictor:
     #Main predictor class for NFL rushing yards
@@ -275,3 +276,42 @@ class NFLRushingPredictor:
             summary['top_5_features'] = importance.to_dict('records')
         
         return summary
+    
+    def update_predictions_with_weekly_stats(
+        self,
+        weekly_stats: pd.DataFrame,
+        weeks: List[int] = [1, 2, 3],
+        alpha: float = 0.6,
+        season_games: int = 17
+    ) -> pd.DataFrame:
+        """
+        Adjust existing model predictions using weekly game stats.
+
+        - weekly_stats: DataFrame with ['player_name','week','rushing_yards'].
+        - weeks: which weeks to use (default [1,2,3]).
+        - alpha: weight given to model prediction vs observed pace.
+        - season_games: games in season (default 17).
+
+        Requires that self.predictions_df (or similar) contains
+        'player_name' and 'predicted_rushing_yards'.
+        """
+        # Expect the model to have a predictions dataframe attribute
+        if hasattr(self, 'predictions_df') and isinstance(self.predictions_df, pd.DataFrame):
+            base_results = self.predictions_df.copy()
+        elif hasattr(self, 'results') and isinstance(self.results, pd.DataFrame):
+            base_results = self.results.copy()
+        else:
+            raise ValueError("No predictions found on the model instance. Run the prediction method first and ensure predictions_df or results exists.")
+
+        adjusted = update_predictions_with_weekly_stats(
+            results=base_results,
+            weekly_stats=weekly_stats,
+            weeks=weeks,
+            alpha=alpha,
+            season_games=season_games
+        )
+
+        # store adjusted predictions for later use
+        self.adjusted_predictions_df = adjusted
+
+        return adjusted

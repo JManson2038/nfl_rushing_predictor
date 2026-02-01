@@ -15,7 +15,7 @@ from pathlib import Path
 # Import project modules
 import sys
 sys.path.append(str(Path(__file__).parent.parent.parent))
-from config.settings import MODEL_CONFIG, MODELS_DIR, PREDICTION_CONFIG
+from config_settings import MODEL_CONFIG, MODELS_DIR, PREDICTION_CONFIG
 from src.data.data_processor import NFLDataProcessor
 from .utils_helpers import update_predictions_with_weekly_stats
 

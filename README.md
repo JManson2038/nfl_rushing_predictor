@@ -2,17 +2,6 @@
 
 A machine learning project to predict the 2025 NFL rushing leader using historical data and advanced feature engineering.
 
-### Web Scraping Ethics
-- **Respectful delays**: 3-second delays between requests (configurable in `config_settings.py`)
-- **Rate limiting**: Maximum 10 requests per minute by default
-- **User-Agent**: Proper identification in requests
-- **robots.txt**: Respects website crawling policies
-- **Exponential backoff**: On rate limit hits
-
-### Data Privacy
-- Historical data is cached locally to minimize requests
-- No personally identifiable information is stored
-- All data sources are publicly available
 
 ## 🚀 Installation
 

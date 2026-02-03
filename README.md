@@ -49,16 +49,7 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-4. **Set up environment variables (optional)**
-```bash
-# Copy the example file
-cp .env.example .env
-
-# Edit .env and add your API keys if you have any
-# nano .env  # or use your preferred editor
-```
-
-5. **Create necessary directories**
+4. **Create necessary directories**
 ```bash
 mkdir -p data/raw data/processed models logs
 ```

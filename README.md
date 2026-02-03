@@ -13,12 +13,6 @@ This project implements several safety measures to ensure responsible data colle
 - **robots.txt**: Respects website crawling policies
 - **Exponential backoff**: On rate limit hits
 
-### API Key Security
-- **Never hardcode API keys** in source code
-- Store keys in environment variables (see `.env.example`)
-- `.gitignore` prevents accidental commits of sensitive data
-- Use `get_api_key()` function for safe key retrieval
-
 ### Data Privacy
 - Historical data is cached locally to minimize requests
 - No personally identifiable information is stored

@@ -2,10 +2,6 @@
 
 A machine learning project to predict the 2025 NFL rushing leader using historical data and advanced feature engineering.
 
-## ⚠️ Safety & Best Practices
-
-This project implements several safety measures to ensure responsible data collection and API usage:
-
 ### Web Scraping Ethics
 - **Respectful delays**: 3-second delays between requests (configurable in `config_settings.py`)
 - **Rate limiting**: Maximum 10 requests per minute by default

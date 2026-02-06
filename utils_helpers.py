@@ -123,7 +123,7 @@ def format_predictions_output(results: pd.DataFrame, max_players: int = 10) -> s
             if 'injury_risk' in row and pd.notna(row['injury_risk']):
                 risk_value = row['injury_risk']
                 if risk_value > 0.7:
-                    risk_level = "High ⚠️"
+                    risk_level = "High"
                 elif risk_value > 0.3:
                     risk_level = "Medium"
                 else:
